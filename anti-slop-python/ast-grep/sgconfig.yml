@@ -1,0 +1,4 @@
+# ast-grep configuration for the anti-slop-python evidence rules.
+# Run: ast-grep scan --config <this-file> <paths>
+ruleDirs:
+  - rules

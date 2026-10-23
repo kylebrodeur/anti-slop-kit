@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Install ruff, ast-grep, and shellcheck
+        run: |
+          # uv, matching CONTRIBUTING.md. The '--from' form belongs to
+          # 'uv tool install'; pipx has no such flag, so 'pipx install
+          # --from ast-grep-cli ast-grep' fails with 'unrecognized
+          # arguments: --from'. The ast-grep-cli package ships the
+          # ast-grep and sg commands.
+          uv tool install ruff
+          uv tool install ast-grep-cli
+          sudo apt-get update -y
+          sudo apt-get install -y shellcheck
+
+      # The workflow runs the same script a contributor runs. The five
+      # gates used to be inline steps here, which meant the local gate
+      # and the CI gate could drift apart: there was no local gate at
+      # all, and a failure only showed up after it landed.
+      - name: The gates
+        run: tests/run-tests.sh

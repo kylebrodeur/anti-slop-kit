@@ -1,0 +1,13 @@
+id: anti-slop-python/no-string-attribute-access
+language: python
+severity: error
+message: Dynamic attribute access by string literal bypasses the type checker.
+note: >-
+  Access the attribute directly with its typed name. If the name is genuinely
+  dynamic, parse it into a bounded set of known fields at the boundary.
+rule:
+  any:
+    - pattern: getattr($OBJ, $NAME)
+    - pattern: setattr($OBJ, $NAME, $VALUE)
+    - pattern: delattr($OBJ, $NAME)
+    - pattern: hasattr($OBJ, $NAME)

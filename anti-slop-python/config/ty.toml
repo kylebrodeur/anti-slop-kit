@@ -1,0 +1,30 @@
+# Strict type-checker config (ty — Astral's checker). Optional companion to the
+# ruff policy; ship it only when the repo uses ty. Ruff owns style, the checker
+# owns types, anti-slop owns evidence.
+#
+# pyright/mypy equivalents: use their own "strict" mode; the anti-slop rules are
+# checker-agnostic.
+[environment]
+python-version = "3.12"
+
+[rules]
+# Everything at error. The two rules that speak directly to evidence laundering:
+blanket-ignore-comment = "error"
+unused-ignore-comment = "error"
+unused-type-ignore-comment = "error"
+ignore-comment-unknown-rule = "error"
+invalid-ignore-comment = "error"
+redundant-cast = "error"
+disjoint-cast = "error"
+assert-type-unspellable-subtype = "error"
+missing-type-argument = "error"
+unsound-assignment = "error"
+unsound-return-statement = "error"
+unsound-yield = "error"
+unresolved-reference = "error"
+possibly-unresolved-reference = "error"
+invalid-argument-type = "error"
+invalid-return-type = "error"
+invalid-assignment = "error"
+unresolved-attribute = "error"
+possibly-missing-attribute = "error"

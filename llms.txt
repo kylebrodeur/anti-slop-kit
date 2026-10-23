@@ -1,0 +1,41 @@
+# anti-slop-tools
+
+A vendored lint policy kit: the neutral anti-slop Oxlint plugin for
+TypeScript, the anti-slop-python policy (ruff families, ast-grep evidence
+rules, a `# SAFETY:` filter), two shell installers that vendor both into
+consumer repos, and the guidance skills.
+
+## Docs
+
+- [README.md](README.md): what the repo is, family links and install path.
+- [docs/quickstart.md](docs/quickstart.md): the numbered path from nothing to a
+  passing policy in a consumer repo.
+- [docs/how-to.md](docs/how-to.md): day-to-day tasks: handling findings,
+  updating vendored copies, writing a justified `# SAFETY:` line.
+- [docs/RUNBOOK.md](docs/RUNBOOK.md): full command surface, every error string
+  and its fix, recovery procedures, and the verification gates.
+- [CONTRIBUTING.md](CONTRIBUTING.md): setup, verification commands, and how to
+  open a change.
+- [SECURITY.md](SECURITY.md): how to report a vulnerability.
+- [AGENTS.md](AGENTS.md): the repo's rules for an agent working in it.
+- [anti-slop/README.md](anti-slop/README.md): the TypeScript plugin provenance
+  and vendoring config.
+- [anti-slop-python/README.md](anti-slop-python/README.md): the Python policy,
+  its three lanes, and its lineage.
+- [anti-slop-python/tests/README.md](anti-slop-python/tests/README.md): the
+  fixture exercise for every evidence rule.
+- [skills/](skills/): one skill per boundary: `anti-slop`,
+  `anti-slop-python`, `authoring-oxlint-anti-slop-rules`,
+  `authoring-shadcn-lint-rules`.
+
+## Family
+
+Part of the AI ECP family: independent, single-purpose repos. The policy
+control plane (the family docs standard, verification harness, and skill
+pack) lives in the private control-plane repo, which is not public.
+
+## Status
+
+Shipped: the TypeScript plugin source, the Python policy, both installers,
+the skills, the tests fixture. Design-only: no npm packaging, no PyPI
+package, no CLI; this is vendored source, checked 2026-10-22.

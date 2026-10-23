@@ -1,0 +1,38 @@
+# Drop-in pre-commit block for anti-slop-python. Merge into the repo's
+# .pre-commit-config.yaml. Uses `uv` if present, else the local interpreter.
+#
+# Layered: ruff owns style/correctness, the checker owns types, ast-grep owns
+# evidence. ast-grep is optional — a repo without it still gets the ruff lane.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (style + correctness)
+        language: system
+        entry: uv run ruff check --force-exclude
+        pass_filenames: true
+        types: [python]
+
+      - id: ruff-format
+        name: ruff format
+        language: system
+        entry: uv run ruff format --force-exclude
+        pass_filenames: true
+        types: [python]
+
+      - id: anti-slop-ast-grep
+        name: anti-slop (evidence rules)
+        language: system
+        entry: >-
+          bash -c 'ast-grep scan --config anti-slop-python/ast-grep/sgconfig.yml
+          --json "$@" | python3 anti-slop-python/ast-grep/filter_safety.py'
+        pass_filenames: true
+        types: [python]
+
+      # Uncomment when the repo uses ty for type checking.
+      # - id: ty
+      #   name: ty (strict types)
+      #   language: system
+      #   entry: uv run ty check
+      #   pass_filenames: false
+      #   always_run: true

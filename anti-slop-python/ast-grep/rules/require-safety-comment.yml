@@ -1,0 +1,13 @@
+id: anti-slop-python/require-safety-comment
+language: python
+severity: error
+message: Cast or typed ignore without a SAFETY justification.
+note: >-
+  Add `# SAFETY: <reason>` on the same or the immediately preceding line, or
+  remove the cast / typed ignore and name the domain type instead.
+rule:
+  any:
+    - pattern: cast($T, $V)
+    - pattern: typing.cast($T, $V)
+    - kind: comment
+      regex: "#\\s*(type|ty)\\s*:\\s*ignore"

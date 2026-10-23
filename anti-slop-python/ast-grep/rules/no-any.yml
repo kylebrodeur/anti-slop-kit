@@ -1,0 +1,15 @@
+id: anti-slop-python/no-any
+language: python
+severity: error
+message: Explicit `Any` without a SAFETY justification.
+note: >-
+  Replace `Any` with a concrete domain type, or add
+  `# SAFETY: <reason>` on the same or the immediately preceding line.
+rule:
+  any:
+    - pattern: Any
+      not:
+        inside:
+          kind: import_from_statement
+          stopBy: end
+    - pattern: typing.Any

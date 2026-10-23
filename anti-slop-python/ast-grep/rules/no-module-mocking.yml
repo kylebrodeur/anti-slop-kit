@@ -1,0 +1,13 @@
+id: anti-slop-python/no-module-mocking
+language: python
+severity: error
+message: Patching a module path mocks state instead of injecting a dependency.
+note: >-
+  Inject the collaborator through a real interface, service layer, or a
+  faithful test double. (Ruff TID251 bans the same `mock.patch` import.)
+rule:
+  any:
+    - pattern: patch($PATH)
+    - pattern: mock.patch($PATH)
+    - pattern: unittest.mock.patch($PATH)
+    - pattern: $MONKEYPATCH.setattr($PATH, $VALUE)

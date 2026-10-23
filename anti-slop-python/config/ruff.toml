@@ -1,0 +1,79 @@
+# Ruff policy for evidence-first Python (anti-slop).
+#
+# Copy the [lint] table into the consumer's [tool.ruff.lint] (or use this file
+# as an extend target: `extend = "..."`). A consumer config always wins; this
+# is the shipped default. Family rationale lives in config/README.md.
+#
+# Ruff carries what it already has, so the ast-grep rules beside this file only
+# add the gaps ruff cannot express as evidence rules.
+target-version = "py312"
+preview = false
+
+[lint]
+# TRY003 (long message text inside `raise`) is exception *style*, not evidence;
+# it dominates real adoptions with four-digit counts. Re-enable per repo.
+ignore = ["TRY003"]
+select = [
+  # Basic hygiene — dead code and undefined names are where slop hides.
+  "E",
+  "F",
+  "W",
+  # Deterministic --fix and modern syntax for the floor version.
+  "I",
+  "UP",
+  # Likely bugs (mutable defaults, unused loop vars).
+  "B",
+  # Python's noImplicitAny: every param and return annotated. An unannotated
+  # parameter is *no evidence* — exactly what anti-slop is about. ANN401 bans
+  # `Any` on arguments; the no-any ast-grep rule adds the SAFETY requirement.
+  "ANN",
+  # No blind `except Exception` / bare `except`.
+  "BLE",
+  # tryceratops (minus TRY003): `raise` without `from`, verbose handler logging.
+  "TRY",
+  # Silent swallowing: try/except/pass and try/except/continue.
+  "S110",
+  "S112",
+  # Dead commented-out code.
+  "ERA",
+  # Unused function arguments, including unread `**kwargs`.
+  "ARG",
+  # Boolean positional args/traps in signatures.
+  "FBT",
+  # Long functions accumulate untyped shortcuts.
+  "PLR09",
+  "C90",
+  # Redundant `else: return`, missing explicit return.
+  "RET",
+  # Simplifiable shapes that hide data contracts (isinstance nests).
+  "SIM",
+  # List-building anti-patterns.
+  "PERF",
+  # Modern idioms the type checker understands better.
+  "FURB",
+  "PIE",
+  # PGH003: blanket `# type: ignore` with no code — pairs with SAFETY.
+  "PGH",
+  # TID251: bans unittest.mock.patch / mock.patch — inject a real seam.
+  "TID",
+  # RUF100: unused `noqa`; suppressions cannot linger.
+  "RUF",
+  # No `print` in shipped code.
+  "T20",
+  # TODO/FIXME stay visible as findings, never silent.
+  "TD",
+  "FIX",
+]
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-statements = 40
+
+[lint.flake8-tidy-imports.banned-api]
+"mock.patch".msg = "Avoid patching state. Pass the dependency explicitly instead."
+"unittest.mock.patch".msg = "Avoid patching state. Pass the dependency explicitly instead."
+
+# Deliberately NOT selected: D (docstring presence/shape is a per-repo style
+# rollout, not slop). Consumers who want it add it to their own select.
