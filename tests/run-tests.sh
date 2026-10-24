@@ -70,6 +70,17 @@ test "$lines" = "13 28 32 38 42 " || {
 }
 
 echo "==> the ruff style lane: the fixture reports the # BAD lines"
+# The fixture is a NEGATIVE fixture, and its findings are the POINT.
+#
+# `tests/fixtures/evidence_rules.py` is a file of deliberately bad
+# code, each bad line marked with a `# BAD:` comment. The gate runs
+# ruff over it and REQUIRES exit 1 with the findings on exactly the
+# `# BAD` lines. A clean pass means the config is not enforcing
+# anything, so a clean pass is a FAILURE here.
+#
+# So the findings this prints are not lint debt and are not to be
+# "fixed": fixing them would break the gate. The shipped rule sources
+# are linted separately, and a finding there IS debt.
 set +e
 (cd "${PY_DIR}" && ruff check --config config/ruff.toml tests/fixtures/evidence_rules.py)
 code=$?
